@@ -91,7 +91,8 @@ RUN mkdir -p /opt/antiLeech \
     && ./configure \
         --prefix=/usr \
     && make \
-    && make install
+    && make install \
+    && cp /usr/share/amule/* /usr/share/amule-dlp/
 
 # Install a nicer web ui
 RUN cd /usr/share/amule-dlp/webserver \
