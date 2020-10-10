@@ -1,8 +1,8 @@
 FROM alpine:latest
 MAINTAINER docker@chabs.name
 
-ENV AMULE_VERSION 2.3.2
 ENV UPNP_VERSION 1.14.0
+# ENV WX_VERSION 3.0.5.1
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 
 RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash && \
@@ -22,6 +22,16 @@ RUN mkdir -p /opt \
     && make \
     && make install
 
+# Build wxWidgets
+# RUN mkdir -p /opt \
+    # && cd /opt \
+    # && wget "https://github.com/wxWidgets/wxWidgets/releases/download/v${WX_VERSION}/wxWidgets-${WX_VERSION}.tar.bz2" \
+    # && tar xvfj wxWidgets-${WX_VERSION}.tar.bz2 \
+    # && cd wxWidgets-${WX_VERSION} \
+    # && ./configure --prefix=/usr --disable-shared \
+    # && make \
+    # && make install
+
 # Build crypto++
 RUN mkdir -p /opt && cd /opt \
     && git clone --branch ${CRYPTOPP_VERSION} --single-branch "https://github.com/weidai11/cryptopp" /opt/cryptopp \
@@ -36,7 +46,7 @@ RUN mkdir -p /opt && cd /opt \
 
 # Build amule from source
 RUN mkdir -p /opt/amule \
-    && git clone --depth 1 https://github.com/amule-project/amule /opt/amule \
+    && git clone --depth 1 https://github.com/persmule/amule-dlp.git /opt/amule \
     && cd /opt/amule \
     && ./autogen.sh \
     && ./configure \
@@ -62,6 +72,16 @@ RUN mkdir -p /opt/amule \
         --enable-optimize \
         --enable-upnp \
         --disable-debug \
+    && make \
+    && make install
+
+# Build antiLeech from source
+RUN mkdir -p /opt/antiLeech \
+    && git clone --depth 1 https://github.com/persmule/amule-dlp.antiLeech.git /opt/antiLeech \
+    && cd /opt/antiLeech \
+    && ./autogen.sh \
+    && ./configure \
+        --prefix=/usr \
     && make \
     && make install
 
