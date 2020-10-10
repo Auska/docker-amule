@@ -94,7 +94,7 @@ RUN mkdir -p /opt/antiLeech \
     && make install
 
 # Install a nicer web ui
-RUN cd /usr/share/amule/webserver \
+RUN cd /usr/share/amule-dlp/webserver \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images
 
