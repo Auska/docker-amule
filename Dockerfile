@@ -10,7 +10,7 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash && \
         autoconf bison g++ gcc gd-dev geoip-dev \
         gettext gettext-dev git libpng-dev libwebp-dev \
         libtool libsm-dev make musl-dev wget \
-        wxgtk-dev zlib-dev
+        flex wxgtk-dev zlib-dev
 
 # Build libupnp
 RUN mkdir -p /opt \
@@ -28,7 +28,14 @@ RUN mkdir -p /opt \
     # && wget "https://github.com/wxWidgets/wxWidgets/releases/download/v${WX_VERSION}/wxWidgets-${WX_VERSION}.tar.bz2" \
     # && tar xvfj wxWidgets-${WX_VERSION}.tar.bz2 \
     # && cd wxWidgets-${WX_VERSION} \
-    # && ./configure --prefix=/usr --disable-shared \
+    # && ./configure --prefix=/usr \
+		# --enable-mem_tracing \
+		# --disable-debug \
+		# --disable-optimise \
+		# --without-opengl \
+		# --enable-gtk2 \
+		# --enable-unicode \
+		# --enable-largefile \
     # && make \
     # && make install
 
