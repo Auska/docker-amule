@@ -84,9 +84,9 @@ DeadServerRetry=3
 ServerKeepAliveTimeout=0
 Reconnect=1
 Scoresystem=1
-Serverlist=0
-AddServerListFromServer=0
-AddServerListFromClient=0
+Serverlist=1
+AddServerListFromServer=1
+AddServerListFromClient=1
 SafeServerConnect=0
 AutoConnectStaticOnly=0
 UPnPEnabled=0
@@ -213,7 +213,7 @@ MaxClientVersions=0
 [Obfuscation]
 IsClientCryptLayerSupported=1
 IsCryptLayerRequested=1
-IsClientCryptLayerRequired=0
+IsClientCryptLayerRequired=1
 CryptoPaddingLenght=254
 CryptoKadUDPKey=338883508
 [PowerManagement]
