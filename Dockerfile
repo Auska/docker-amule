@@ -55,6 +55,7 @@ RUN mkdir -p /opt && cd /opt \
 RUN mkdir -p /opt/amule \
     && git clone --depth 1 https://github.com/persmule/amule-dlp.git /opt/amule \
     && cd /opt/amule \
+	&& sed -i "s/UpnpInit/UpnpInit2/g" src/UPnPBase.cpp \
     && ./autogen.sh \
     && ./configure \
         --disable-gui \
