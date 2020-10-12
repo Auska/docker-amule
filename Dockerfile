@@ -6,12 +6,12 @@ ENV WX_VERSION 3.0.5.1
 # ENV PNG_VERSION 1.6.35
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 
-RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash && \
+RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash boost && \
     apk --update add --virtual build-dependencies alpine-sdk automake \
         autoconf bison g++ gcc gd-dev geoip-dev \
         gettext gettext-dev git libpng-dev libwebp-dev \
         libtool libsm-dev make musl-dev wget \
-        flex zlib-dev zlib-static \
+        flex zlib-dev wxgtk-dev zlib-static \
         asio-dev boost-static libpng-static
 
 # Build libupnp
