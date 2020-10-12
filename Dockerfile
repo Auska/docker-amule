@@ -1,9 +1,7 @@
-FROM alpine:3.12 as compiling
+FROM alpine:latest
 MAINTAINER docker@chabs.name
 
 ENV UPNP_VERSION 1.14.0
-# ENV WX_VERSION 3.0.5.1
-# ENV PNG_VERSION 1.6.35
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 
 # Add startup script
@@ -13,9 +11,8 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash asio \
     && apk --update add --virtual build-dependencies alpine-sdk automake \
         autoconf bison g++ gcc gd-dev geoip-dev \
         gettext gettext-dev git libpng-dev libwebp-dev \
-        libtool libsm-dev make musl-dev wget boost \
-        flex zlib-dev wxgtk-dev zlib-static \
-        asio-dev boost-static libpng-static \
+        libtool libsm-dev make musl-dev wget \
+        flex wxgtk-dev zlib-dev asio-dev \
 # Build libupnp
     && mkdir -p /opt \
     && cd /opt \
@@ -25,29 +22,6 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash asio \
     && ./configure --prefix=/usr \
     && make \
     && make install \
-# Build wxWidgets
-    # && mkdir -p /opt \
-    # && cd /opt \
-    # && wget "https://github.com/wxWidgets/wxWidgets/releases/download/v${WX_VERSION}/wxWidgets-${WX_VERSION}.tar.bz2" \
-    # && tar xvfj wxWidgets-${WX_VERSION}.tar.bz2 \
-    # && cd wxWidgets-${WX_VERSION} \
-    # && ./configure --prefix=/usr \
-	# 	--enable-unicode \
-	# 	--disable-debug \
-	# 	--enable-static \
-    #     --disable-shared \
-    # && make \
-    # && make install \
-# Build libpng
-#     && mkdir -p /opt \
-    # && cd /opt \
-    # && wget "https://github.com/glennrp/libpng/archive/v${PNG_VERSION}.tar.gz" \
-    # && tar xvf v${PNG_VERSION}.tar.gz \
-    # && cd libpng-${PNG_VERSION} \
-    # && ./configure --prefix=/usr \
-        # --enable-static \
-    # && make \
-    # && make install
 # Build crypto++
     && mkdir -p /opt && cd /opt \
     && git clone --branch ${CRYPTOPP_VERSION} --single-branch "https://github.com/weidai11/cryptopp" /opt/cryptopp \
@@ -56,7 +30,7 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash asio \
     && export CXXFLAGS="${CXXFLAGS} -DNDEBUG -fPIC" \
     && make -f GNUmakefile \
     && make libcryptopp.so \
-    && install -Dm644 libcryptopp.* /usr/lib/ \
+    && install -Dm644 libcryptopp.so* /usr/lib/ \
     && mkdir -p /usr/include/cryptopp \
     && install -m644 *.h /usr/include/cryptopp/ \
 # Build amule from source
@@ -84,17 +58,12 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash asio \
         --enable-alcc \
         --enable-fileview \
         --enable-geoip \
-        --with-geoip-static \
         --enable-mmap \
         --enable-optimize \
         --enable-upnp \
-        --with-boost \
-        --enable-static-boost \
         --disable-debug \
-        # --enable-static \
     && make \
     && make install \
-    # && make DESTDIR=/amule install-strip \
 # Build antiLeech from source
     && mkdir -p /opt/antiLeech \
     && git clone --depth 1 https://github.com/persmule/amule-dlp.antiLeech.git /opt/antiLeech \
@@ -104,33 +73,15 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash asio \
         --prefix=/usr \
     && make \
     && make install \
-    # && cp /usr/share/amule/* /amule/usr/share/amule/ \
+    && cp /usr/share/amule/* /usr/share/amule-dlp/ \
 # Install a nicer web ui
     && cd /usr/share/amule-dlp/webserver \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
 # Final cleanup
+    && chmod a+x /home/amule/amule.sh \
     && rm -rf /var/cache/apk/* && rm -rf /opt \
-    && apk del build-dependencies \
-# Copy LIBS
-#     && ldd /usr/bin/ed2k|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/ed2k.tar \
-#     && tar -xvf /tmp/ed2k.tar -C /amule \
-#     && ldd /usr/bin/cas|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/cas.tar \
-#     && tar -xvf /tmp/cas.tar -C /amule \
-#     && ldd /usr/bin/alcc|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/alcc.tar \
-#     && tar -xvf /tmp/alcc.tar -C /amule \
-#     && ldd /usr/bin/amule|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amule.tar \
-#     && tar -xvf /tmp/amule.tar -C /amule \
-#     && ldd /usr/bin/amuled|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amuled.tar \
-#     && tar -xvf /tmp/amuled.tar -C /amule \
-#     && ldd /usr/bin/amuleweb|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amuleweb.tar \
-#     && tar -xvf /tmp/amuleweb.tar -C /amule \
-#     && ldd /usr/bin/amulecmd|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amulecmd.tar \
-#     && tar -xvf /tmp/amulecmd.tar -C /amule
-# FROM alpine:3.12
-#     && apk --update add sudo bash
-# COPY --from=compiling  /amule  /
-    && chmod a+x /home/amule/amule.sh
+    && apk del build-dependencies
 
 EXPOSE 4711/tcp 4712/tcp 4672/udp 4662/tcp
 
