@@ -3,6 +3,7 @@ MAINTAINER docker@chabs.name
 
 ENV UPNP_VERSION 1.14.0
 # ENV WX_VERSION 3.0.5.1
+# ENV PNG_VERSION 1.6.35
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 
 RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash && \
@@ -10,7 +11,8 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash && \
         autoconf bison g++ gcc gd-dev geoip-dev \
         gettext gettext-dev git libpng-dev libwebp-dev \
         libtool libsm-dev make musl-dev wget \
-        bison flex wxgtk-dev zlib-dev asio-dev
+        flex wxgtk-dev zlib-dev zlib-static \
+        asio-dev boost-static libpng-static
 
 # Build libupnp
 RUN mkdir -p /opt \
@@ -32,10 +34,22 @@ RUN mkdir -p /opt \
 		# --enable-mem_tracing \
 		# --disable-debug \
 		# --disable-optimise \
-		# --without-opengl \
+		# --without-opengl \ ./configure --prefix=/usr --disable-shared --disable-debug --enable-unicode --enable-static
 		# --enable-gtk2 \
 		# --enable-unicode \
 		# --enable-largefile \
+        # --disable-shared \
+    # && make \
+    # && make install
+
+# Build libpng
+# RUN mkdir -p /opt \
+    # && cd /opt \
+    # && wget "https://github.com/glennrp/libpng/archive/v${PNG_VERSION}.tar.gz" \
+    # && tar xvf v${PNG_VERSION}.tar.gz \
+    # && cd libpng-${PNG_VERSION} \
+    # && ./configure --prefix=/usr \
+        # --enable-static \
     # && make \
     # && make install
 
@@ -47,7 +61,7 @@ RUN mkdir -p /opt && cd /opt \
     && export CXXFLAGS="${CXXFLAGS} -DNDEBUG -fPIC" \
     && make -f GNUmakefile \
     && make libcryptopp.so \
-    && install -Dm644 libcryptopp.so* /usr/lib/ \
+    && install -Dm644 libcryptopp.* /usr/lib/ \
     && mkdir -p /usr/include/cryptopp \
     && install -m644 *.h /usr/include/cryptopp/
 
@@ -76,11 +90,14 @@ RUN mkdir -p /opt/amule \
         --enable-alcc \
         --enable-fileview \
         --enable-geoip \
+        --with-geoip-static \
         --enable-mmap \
         --enable-optimize \
         --enable-upnp \
         --with-boost \
+        --enable-static-boost \
         --disable-debug \
+        # --enable-static \
     && make \
     && make install
 
