@@ -10,7 +10,7 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash && \
         autoconf bison g++ gcc gd-dev geoip-dev \
         gettext gettext-dev git libpng-dev libwebp-dev \
         libtool libsm-dev make musl-dev wget \
-        flex wxgtk-dev zlib-dev
+        bison flex wxgtk-dev zlib-dev asio-dev
 
 # Build libupnp
 RUN mkdir -p /opt \
@@ -79,6 +79,7 @@ RUN mkdir -p /opt/amule \
         --enable-mmap \
         --enable-optimize \
         --enable-upnp \
+        --with-boost \
         --disable-debug \
     && make \
     && make install
