@@ -78,10 +78,28 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo wxgtk zlib bash asio \
     && cd /usr/share/amule-dlp/webserver \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
+# Copy Libs
+    && mkdir /amule \
+    && ldd /usr/bin/ed2k|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/ed2k.tar \
+    && tar -xvf /tmp/ed2k.tar -C /amule \
+    && ldd /usr/bin/cas|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/cas.tar \
+    && tar -xvf /tmp/cas.tar -C /amule \
+    && ldd /usr/bin/alcc|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/alcc.tar \
+    && tar -xvf /tmp/alcc.tar -C /amule \
+    && ldd /usr/bin/amule|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amule.tar \
+    && tar -xvf /tmp/amule.tar -C /amule \
+    && ldd /usr/bin/amuled|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amuled.tar \
+    && tar -xvf /tmp/amuled.tar -C /amule \
+    && ldd /usr/bin/amuleweb|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amuleweb.tar \
+    && tar -xvf /tmp/amuleweb.tar -C /amule \
+    && ldd /usr/bin/amulecmd|cut -d ">" -f 2|grep lib|cut -d "(" -f 1|xargs tar -chvf /tmp/amulecmd.tar \
+    && tar -xvf /tmp/amulecmd.tar -C /amule \
 # Final cleanup
     && chmod a+x /home/amule/amule.sh \
     && rm -rf /var/cache/apk/* && rm -rf /opt \
-    && apk del build-dependencies
+    && apk del build-dependencies \
+    && cp -rf /amule/* / \
+    && rm -rf /amule
 
 EXPOSE 4711/tcp 4712/tcp 4672/udp 4662/tcp
 
