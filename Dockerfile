@@ -1,32 +1,16 @@
 FROM alpine:latest
 MAINTAINER docker@chabs.name
 
-ENV WX_VERSION 3.0.5
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 
-RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash && \
-    apk --update add --virtual build-dependencies alpine-sdk automake \
-        autoconf bison g++ gcc gd-dev geoip-dev \
-        gettext gettext-dev git libpng-dev libwebp-dev \
-        libtool libsm-dev make musl-dev wget \
-        flex wxgtk wxgtk-dev zlib-dev zlib-static asio-dev
+RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash wxgtk && \
+    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev gd-dev
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
 
 # Build
 RUN mkdir -p /opt \
-    && cd /opt \
-    && wget "https://github.com/wxWidgets/wxWidgets/releases/download/v${WX_VERSION}/wxWidgets-${WX_VERSION}.tar.bz2" \
-    && tar xvfj wxWidgets-${WX_VERSION}.tar.bz2 \
-    && cd wxWidgets-${WX_VERSION} \
-    && ./configure \
-        --enable-unicode \
-        --disable-debug \
-        --enable-static \
-        --disable-shared \
-    && make \
-    && make install \
     && cd /opt \
     && git clone --branch ${CRYPTOPP_VERSION} --single-branch "https://github.com/weidai11/cryptopp" /opt/cryptopp \
     && cd /opt/cryptopp \
@@ -40,10 +24,8 @@ RUN mkdir -p /opt \
     && mkdir -p /opt/amule \
     && git clone --depth 1 https://github.com/persmule/amule-dlp.git /opt/amule \
     && cd /opt/amule \
-	&& sed -i "s/UpnpInit/UpnpInit2/g" src/UPnPBase.cpp \
     && ./autogen.sh \
     && ./configure \
-        --disable-gui \
         --disable-amule-gui \
         --disable-wxcas \
         --disable-alc \
@@ -51,9 +33,6 @@ RUN mkdir -p /opt \
         --disable-kde-in-home \
         --prefix=/usr \
         --mandir=/usr/share/man \
-        --enable-unicode \
-        --without-subdirs \
-        --without-expat \
         --enable-amule-daemon \
         --enable-amulecmd \
         --enable-webserver \
