@@ -4,7 +4,7 @@ MAINTAINER docker@chabs.name
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 
 RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash wxgtk && \
-    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev gd-dev
+    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev gd-dev libtool
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
