@@ -2,9 +2,10 @@ FROM alpine:latest
 MAINTAINER docker@chabs.name
 
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
+ENV TZ Asia/Shanghai
 
 RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash wxgtk && \
-    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev gd-dev libtool
+    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev gd-dev libtool tzdata
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
@@ -62,6 +63,8 @@ RUN mkdir -p /opt \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
     && chmod a+x /home/amule/amule.sh \
     && rm -rf /var/cache/apk/* && rm -rf /opt \
+    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
     && apk del build-dependencies
 
 EXPOSE 4711/tcp 4712/tcp 4672/udp 4665/udp 4662/tcp 4661/tcp
