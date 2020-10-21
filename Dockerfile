@@ -18,8 +18,8 @@ ADD amule.sh /home/amule/amule.sh
 RUN mkdir -p /opt \
     && cd /opt \
     && wget "https://github.com/wxWidgets/wxWidgets/releases/download/v${WX_VERSION}/wxWidgets-${WX_VERSION}.tar.bz2" \
-    && tar xvfj libupnp-${UPNP_VERSION}.tar.bz2 \
-    && cd libupnp-${UPNP_VERSION} \
+    && tar xvfj wxWidgets-${WX_VERSION}.tar.bz2 \
+    && cd wxWidgets-${WX_VERSION} \
     && ./configure \
         --enable-unicode \
         --disable-debug \
