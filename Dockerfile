@@ -9,6 +9,7 @@ RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash wxgtk && \
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
+ADD 001_Record_IP.patch /001.patch
 
 # Build
 RUN mkdir -p /opt \
@@ -25,6 +26,7 @@ RUN mkdir -p /opt \
     && mkdir -p /opt/amule \
     && git clone --depth 1 https://github.com/persmule/amule-dlp.git /opt/amule \
     && cd /opt/amule \
+    && patch -p1 < /001.patch \
     && ./autogen.sh \
     && ./configure \
         --disable-amule-gui \
@@ -62,7 +64,7 @@ RUN mkdir -p /opt \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
     && chmod a+x /home/amule/amule.sh \
-    && rm -rf /var/cache/apk/* && rm -rf /opt \
+    && rm -rf /var/cache/apk/* && rm -rf /opt && rm /001.patch \
     && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone \
     && apk del build-dependencies

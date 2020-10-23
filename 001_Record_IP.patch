@@ -1,0 +1,14 @@
+diff --git a/src/DLP.cpp b/src/DLP.cpp
+index 7016598..4352380 100644
+--- a/src/DLP.cpp
++++ b/src/DLP.cpp
+@@ -107,6 +107,9 @@ bool DLP::DLPCheck(CUpDownClient* c){
+ 		return true;
+ 	}
+ 
++	wxString wxInfo;
++	wxInfo.Printf(wxT("[Record IP] %s"), c->GetClientFullInfo().c_str());
++	theApp->AddDLPMessageLine(wxInfo);
+ 	return false;
+ 
+ }
