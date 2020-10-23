@@ -3,6 +3,9 @@
 # Uncomment for debug
 #set -x
 
+cp /usr/share/zoneinfo/${TZ} /etc/localtime
+echo ${TZ} > /etc/timezone
+
 AMULE_UID=${PUID:-5000}
 AMULE_GID=${PGID:-5000}
 AMULE_WEBUI_TEMPLATE=${WEBUI_TEMPLATE:-default}
