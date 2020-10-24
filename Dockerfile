@@ -4,8 +4,8 @@ MAINTAINER docker@chabs.name
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 ENV TZ Asia/Shanghai
 
-RUN apk --update add gd geoip libpng libwebp pwgen sudo zlib bash wxgtk tzdata && \
-    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev gd-dev libtool
+RUN apk --update add geoip libpng sudo zlib bash wxgtk tzdata && \
+    apk --update add --virtual build-dependencies build-base git wget autoconf automake gettext-dev pkgconf wxgtk-dev flex bison asio-dev libtool
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
@@ -32,16 +32,14 @@ RUN mkdir -p /opt \
         --disable-amule-gui \
         --disable-wxcas \
         --disable-alc \
-        --disable-plasmamule \
-        --disable-kde-in-home \
+        --disable-cas \
+        --disable-alcc \
+        --disable-nls \
         --prefix=/usr \
         --mandir=/usr/share/man \
         --enable-amule-daemon \
         --enable-amulecmd \
         --enable-webserver \
-        --enable-cas \
-        --enable-alcc \
-        --enable-fileview \
         --enable-geoip \
         --enable-mmap \
         --enable-optimize \
