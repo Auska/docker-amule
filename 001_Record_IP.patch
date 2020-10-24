@@ -1,20 +1,30 @@
 diff --git a/src/DLP.cpp b/src/DLP.cpp
-index 7016598..77ade15 100644
+index 7016598..6909787 100644
 --- a/src/DLP.cpp
 +++ b/src/DLP.cpp
-@@ -101,12 +101,15 @@ bool DLP::DLPCheck(CUpDownClient* c){
+@@ -62,6 +62,9 @@ bool DLP::DLPCheck(CUpDownClient* c){
+ 	CString clientver(c->GetClientVerString());
+ 	CString uname(c->GetUserName());
+ 	CString uhash(wxString(c->GetUserHash().EncodeSTL().c_str(), wxConvUTF8));
++	CString fullip(c->GetFullIP());
++	CString lowid(c->HasLowID());
++	CString osinfo(c->GetClientOSInfo());
+ 	
+ 	//CheckGhostMod
+ 	if(prefs & PF_GHOSTMOD) {
+@@ -101,12 +104,15 @@ bool DLP::DLPCheck(CUpDownClient* c){
  	if (tmp != NULL) {
  		ret = tmp;
  		wxString wxInfo;
 -		wxInfo.Printf(wxT("[%s] %s"), ret.c_str(), c->GetClientFullInfo().c_str());
-+		wxInfo.Printf(wxT("[%s] %s [%s]"), ret.c_str(), c->GetClientFullInfo().c_str(), uhash.c_str());
++		wxInfo.Printf(wxT("[%s][%s][%s][%s][%s][%s][LowID%s][%s]"), ret.c_str(), uhash.c_str(), osinfo.c_str(), clientver.c_str(), modver.c_str(), fullip.c_str(), lowid.c_str(), uname.c_str());
  		c->Ban();
  		theApp->AddDLPMessageLine(wxInfo);
  		return true;
  	}
  
 +	wxString wxInfo;
-+	wxInfo.Printf(wxT("[Record IP] %s [%s]"), c->GetClientFullInfo().c_str(), uhash.c_str());
++	wxInfo.Printf(wxT("[Record IP][%s][%s][%s][%s][%s][LowID:%s][%s]"), uhash.c_str(), osinfo.c_str(), clientver.c_str(), modver.c_str(), fullip.c_str(), lowid.c_str(), uname.c_str());
 +	theApp->AddDLPMessageLine(wxInfo);
  	return false;
  
