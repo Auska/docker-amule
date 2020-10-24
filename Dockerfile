@@ -71,8 +71,11 @@ RUN mkdir -p /opt \&& cd /opt \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
     && chmod a+x /home/amule/amule.sh \
-    && rm -rf /var/cache/apk/* && rm -rf /opt && rm /001.patch \
-    && apk del build-dependencies
+    && rm -rf /usr/lib/libcryptopp.a /usr/include/cryptopp/ \
+    && cd /opt/wxWidgets-${WX_VERSION} \
+    && make uninstall \
+    && apk del build-dependencies \
+    && rm -rf /var/cache/apk/* && rm -rf /opt && rm /001.patch
 
 EXPOSE 4711/tcp 4712/tcp 4672/udp 4665/udp 4662/tcp 4661/tcp
 
