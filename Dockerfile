@@ -1,12 +1,11 @@
 FROM alpine:latest
 MAINTAINER docker@chabs.name
 
-ENV WX_VERSION 3.0.5
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
 ENV TZ Asia/Shanghai
 
-RUN apk --update add geoip libpng sudo zlib bash tzdata && \
-    apk --update add --virtual build-dependencies build-base git wget expat-static zlib-static autoconf automake gettext-dev pkgconf wxgtk wxgtk-dev flex bison asio-dev libtool
+RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk-base && \
+    apk --update add --virtual build-dependencies build-base git wget flex bison autoconf automake pkgconf libtool expat-dev zlib-dev gettext-dev wxgtk-base-dev asio-dev
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
@@ -14,17 +13,6 @@ ADD 001_Record_IP.patch /001.patch
 
 # Build
 RUN mkdir -p /opt \&& cd /opt \
-    && wget "https://github.com/wxWidgets/wxWidgets/releases/download/v${WX_VERSION}/wxWidgets-${WX_VERSION}.tar.bz2" \
-    && tar xvfj wxWidgets-${WX_VERSION}.tar.bz2 \
-    && cd wxWidgets-${WX_VERSION} \
-    && ./configure \
-        --enable-compat28 \
-        --disable-debug \
-        --enable-static \
-        --disable-shared \
-    && make \
-    && make install \
-    && cd /opt \
     && git clone --branch ${CRYPTOPP_VERSION} --single-branch "https://github.com/weidai11/cryptopp" /opt/cryptopp \
     && cd /opt/cryptopp \
     && sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile \
@@ -56,7 +44,6 @@ RUN mkdir -p /opt \&& cd /opt \
         --disable-upnp \
         --disable-debug \
         --with-boost \
-        --enable-boost-static \
     && make \
     && make install \
     && mkdir -p /opt/antiLeech \
@@ -72,8 +59,6 @@ RUN mkdir -p /opt \&& cd /opt \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
     && chmod a+x /home/amule/amule.sh \
     && rm -rf /usr/lib/libcryptopp.a /usr/include/cryptopp/ \
-    && cd /opt/wxWidgets-${WX_VERSION} \
-    && make uninstall \
     && apk del build-dependencies \
     && rm -rf /var/cache/apk/* && rm -rf /opt && rm /001.patch
 
