@@ -30,7 +30,7 @@ RUN mkdir -p /opt \
     && mkdir -p /usr/include/cryptopp \
     && install -m644 *.h /usr/include/cryptopp/ \
     && mkdir -p /opt/amule \
-    && it clone --branch ${AMULE_VERSION} --single-branch "https://github.com/amule-project/amule" /opt/amule \
+    && git clone --branch ${AMULE_VERSION} --single-branch "https://github.com/amule-project/amule" /opt/amule \
     && cd /opt/amule \
     && ./autogen.sh \
     && ./configure \
