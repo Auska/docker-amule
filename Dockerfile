@@ -1,17 +1,26 @@
 FROM alpine:latest
 MAINTAINER docker@chabs.name
 
-ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
+ENV AMULE_VERSION 2.3.3
+ENV UPNP_VERSION 1.14.1
+ENV CRYPTOPP_VERSION CRYPTOPP_8_4_0
 ENV TZ Asia/Shanghai
 
-RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk && \
+RUN apk --update add libpng sudo zlib bash tzdata wxgtk && \
     apk --update add --virtual build-dependencies build-base git wget flex bison autoconf automake pkgconf libtool expat-dev zlib-dev gettext-dev wxgtk-dev asio-dev
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
 
 # Build
-RUN mkdir -p /opt \&& cd /opt \
+RUN mkdir -p /opt \
+    && cd /opt \
+    && wget "http://downloads.sourceforge.net/sourceforge/pupnp/libupnp-${UPNP_VERSION}.tar.bz2" \
+    && tar xvfj libupnp*.tar.bz2 \
+    && cd libupnp* \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
     && git clone --branch ${CRYPTOPP_VERSION} --single-branch "https://github.com/weidai11/cryptopp" /opt/cryptopp \
     && cd /opt/cryptopp \
     && sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile \
@@ -21,7 +30,7 @@ RUN mkdir -p /opt \&& cd /opt \
     && mkdir -p /usr/include/cryptopp \
     && install -m644 *.h /usr/include/cryptopp/ \
     && mkdir -p /opt/amule \
-    && git clone --depth 1 https://github.com/amule-project/amule.git /opt/amule \
+    && it clone --branch ${AMULE_VERSION} --single-branch "https://github.com/amule-project/amule" /opt/amule \
     && cd /opt/amule \
     && ./autogen.sh \
     && ./configure \
@@ -31,19 +40,19 @@ RUN mkdir -p /opt \&& cd /opt \
         --disable-cas \
         --disable-alcc \
         --disable-nls \
+        --disable-geoip \
         --prefix=/usr \
         --mandir=/usr/share/man \
         --enable-amule-daemon \
         --enable-amulecmd \
         --enable-webserver \
-        --enable-geoip \
         --enable-mmap \
         --enable-optimize \
         --disable-upnp \
         --disable-debug \
         --with-boost \
     && make \
-    && make install \
+    && make install-strip \
     && cd /usr/share/amule/webserver \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
