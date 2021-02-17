@@ -58,7 +58,7 @@ RUN mkdir -p /opt \
     && chmod a+x /home/amule/amule.sh \
     && rm -rf /usr/lib/libcryptopp.a /usr/include/cryptopp/ \
     && apk del build-dependencies \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/* /opt
 
 EXPOSE 4711/tcp 4712/tcp 4672/udp 4665/udp 4662/tcp 4661/tcp
 
