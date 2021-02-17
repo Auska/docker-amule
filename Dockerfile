@@ -48,7 +48,6 @@ RUN mkdir -p /opt \
         --enable-webserver \
         --enable-mmap \
         --enable-optimize \
-        --disable-upnp \
         --disable-debug \
         --with-boost \
     && make \
