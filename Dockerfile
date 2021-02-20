@@ -60,6 +60,6 @@ RUN mkdir -p /opt \&& cd /opt \
     && apk del build-dependencies \
     && rm -rf /var/cache/apk/* && rm -rf /opt
 
-EXPOSE 4711/tcp 4712/tcp 4672/udp 4665/udp 4662/tcp 4661/tcp
+EXPOSE 4711/tcp 4672/udp 4662/tcp
 
 ENTRYPOINT ["/home/amule/amule.sh"]
