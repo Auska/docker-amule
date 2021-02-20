@@ -45,7 +45,7 @@ RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk \
         --disable-debug \
         --with-boost \
     && make \
-    && make install \
+    && make install-strip \
     && mkdir -p /opt/antiLeech \
     && git clone --depth 1 https://github.com/persmule/amule-dlp.antiLeech.git /opt/antiLeech \
     && cd /opt/antiLeech \
