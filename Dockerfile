@@ -10,7 +10,8 @@ ADD amule.sh /home/amule/amule.sh
 # Build
 RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk \
     && apk --update add --virtual build-dependencies build-base git wget flex bison autoconf automake pkgconf libtool expat-dev zlib-dev gettext-dev wxgtk-dev asio-dev \
-    && mkdir -p /opt \&& cd /opt \
+    && mkdir -p /opt \
+    && cd /opt \
     && git clone --branch ${CRYPTOPP_VERSION} --single-branch "https://github.com/weidai11/cryptopp" /opt/cryptopp \
     && cd /opt/cryptopp \
     && sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile \
