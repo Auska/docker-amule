@@ -6,7 +6,7 @@ ENV TZ Asia/Shanghai
 
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
-ADD 001_Record_IP.patch /001.patch
+ADD 001_BanLowID.patch /001.patch
 
 # Build
 RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk \

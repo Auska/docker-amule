@@ -1,5 +1,5 @@
 diff --git a/src/DLP.cpp b/src/DLP.cpp
-index 7016598..f19745d 100644
+index 7016598..d06c2d0 100644
 --- a/src/DLP.cpp
 +++ b/src/DLP.cpp
 @@ -62,6 +62,7 @@ bool DLP::DLPCheck(CUpDownClient* c){
@@ -18,7 +18,7 @@ index 7016598..f19745d 100644
  	// Check VeryCD eMule
  	if ((prefs & PF_VERYCDEMULE) && (tmp == NULL)) {
  		if(modver.Find(wxT("VeryCD")) != wxNOT_FOUND){
-@@ -97,16 +97,24 @@ bool DLP::DLPCheck(CUpDownClient* c){
+@@ -97,11 +97,16 @@ bool DLP::DLPCheck(CUpDownClient* c){
  			tmp = ret.c_str();
  		}
  	}
@@ -37,11 +37,3 @@ index 7016598..f19745d 100644
  		c->Ban();
  		theApp->AddDLPMessageLine(wxInfo);
  		return true;
- 	}
- 
-+	wxString wxInfo;
-+	wxInfo.Printf(wxT("_%s_Record IP_%s_%s_%s"), uhash.c_str(), fullip.c_str(), clientver.c_str(), uname.c_str());
-+	theApp->AddDLPMessageLine(wxInfo);
- 	return false;
- 
- }
