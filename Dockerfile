@@ -6,14 +6,12 @@ ENV UPNP_VERSION 1.14.1
 ENV CRYPTOPP_VERSION CRYPTOPP_8_4_0
 ENV TZ Asia/Shanghai
 
-RUN apk --update add libpng sudo zlib bash tzdata wxgtk && \
-    apk --update add --virtual build-dependencies build-base git wget flex bison autoconf automake pkgconf libtool expat-dev zlib-dev gettext-dev wxgtk-dev asio-dev
-
 # Add startup script
 ADD amule.sh /home/amule/amule.sh
 
-# Build
-RUN mkdir -p /opt \
+RUN apk --update add libpng sudo zlib bash tzdata wxgtk \
+    && apk --update add --virtual build-dependencies build-base git wget flex bison autoconf automake pkgconf libtool expat-dev zlib-dev gettext-dev wxgtk-dev asio-dev \
+    && mkdir -p /opt \
     && cd /opt \
     && wget "http://downloads.sourceforge.net/sourceforge/pupnp/libupnp-${UPNP_VERSION}.tar.bz2" \
     && tar xvfj libupnp*.tar.bz2 \
@@ -60,6 +58,6 @@ RUN mkdir -p /opt \
     && apk del build-dependencies \
     && rm -rf /var/cache/apk/* /opt
 
-EXPOSE 4711/tcp 4712/tcp 4672/udp 4665/udp 4662/tcp 4661/tcp
+EXPOSE 4711/tcp 4672/udp 4662/tcp
 
 ENTRYPOINT ["/home/amule/amule.sh"]
