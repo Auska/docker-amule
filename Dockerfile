@@ -31,6 +31,7 @@ RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk \
         --disable-cas \
         --disable-alcc \
         --disable-nls \
+        --disable-monolithic \
         --prefix=/usr \
         --mandir=/usr/share/man \
         --enable-amule-daemon \
