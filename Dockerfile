@@ -55,7 +55,7 @@ RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk \
         --prefix=/usr \
     && make \
     && make install \
-    && cd /usr/share/amule-dlp/webserver \
+    && cd /usr/share/amule/webserver \
     && git clone --depth 1 https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
     && rm -rf AmuleWebUI-Reloaded/.git AmuleWebUI-Reloaded/doc-images \
     && chmod a+x /home/amule/amule.sh \
