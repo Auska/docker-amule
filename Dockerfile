@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.13
 MAINTAINER docker@chabs.name
 
 ENV CRYPTOPP_VERSION CRYPTOPP_8_2_0
