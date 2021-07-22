@@ -23,6 +23,8 @@ RUN apk --update add geoip libpng sudo zlib bash tzdata wxgtk \
     && mkdir -p /opt/amule \
     && git clone --depth 1 https://github.com/persmule/amule-dlp.git /opt/amule \
     && cd /opt/amule \
+    && sed -i "s/aMule-dlp/aMule/g" src/include/common/ClientVersion.h \
+    && sed -i -e "s/aMule-dlp/aMule/g" -e "s/2.3.3-dlp/2.3.3/g" configure.ac \
     && ./autogen.sh \
     && ./configure \
         --disable-amule-gui \
